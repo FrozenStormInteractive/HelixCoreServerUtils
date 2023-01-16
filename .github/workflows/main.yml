@@ -19,7 +19,7 @@ jobs:
           global-json-file: global.json
 
       - name: Install dependencies
-        run: dotnet restore
+        run: dotnet restore -r linux-x64
 
       - name: Build
         run: dotnet build -r linux-x64 --configuration Release --no-restore
