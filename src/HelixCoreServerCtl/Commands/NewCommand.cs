@@ -235,7 +235,7 @@ internal class NewCommand : IAsyncCommand
                 con.UserName = SuperUserName;
 
                 P4.Options connectOptions = new P4.Options();
-                connectOptions["ProgramName"] ="p4dctlng";
+                connectOptions["ProgramName"] ="p4dctl-ng";
                 var programVersion = Assembly.GetExecutingAssembly().GetName().Version;
                 if (programVersion is not null)
                 {

@@ -1,4 +1,7 @@
 using CommandLine;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace HelixCoreServerCtl;
 
@@ -11,8 +14,26 @@ internal class StatusCommand : ICommand
     [Option('a', "all", Default = false, HelpText = "All servers.")]
     public bool AllServices { get; set; }
 
+    [Option('q', Default = false, HelpText = "Send output to syslog instead of STDOUT or STDERR.")]
+    public bool Syslog { get; set; }
+
     public int Execute()
     {
+        var logConfiguration = new LoggerConfiguration();
+        if (Syslog)
+        {
+            logConfiguration.WriteTo.LocalSyslog("p4dctl-ng");
+        }
+        else
+        {
+            logConfiguration.WriteTo.Console(
+                outputTemplate: "{Message:lj}{NewLine}{Exception}", 
+                theme: ConsoleTheme.None,
+                standardErrorFromLevel: LogEventLevel.Error);
+        }
+
+        var log = logConfiguration.CreateLogger();
+
         IList<Service> services;
         if (AllServices)
         {
@@ -34,7 +55,7 @@ internal class StatusCommand : ICommand
                 }
                 else
                 {
-                    Console.Error.WriteLine($"Service '{serviceName}' not found.");
+                    log.Error($"Service '{serviceName}' not found.");
                 }
             }
         }
@@ -47,16 +68,16 @@ internal class StatusCommand : ICommand
             {
                 if (!service.Config.Enabled)
                 {
-                    Console.WriteLine($"'{service.Config.Name}' p4d service is disabled.");
+                    log.Information($"'{service.Config.Name}' p4d service is disabled.");
                 }
                 else if (service.IsRunning)
                 {
-                    Console.WriteLine($"'{service.Config.Name}' p4d service is running.");
+                    log.Information($"'{service.Config.Name}' p4d service is running.");
                 }
                 else
                 {
                     exitCode = 1;
-                    Console.WriteLine($"'{service.Config.Name}' p4d service not running.");
+                    log.Information($"'{service.Config.Name}' p4d service not running.");
                 }
             }
 
