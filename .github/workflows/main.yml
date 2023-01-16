@@ -22,4 +22,4 @@ jobs:
         run: dotnet restore -r linux-x64
 
       - name: Publish
-        run: dotnet publish --project=src/HelixCoreServerCtl  -r linux-x64 --self-contained true --configuration Release --no-restore -p:DebugType=None
+        run: dotnet publish src/HelixCoreServerCtl  -r linux-x64 --self-contained true --configuration Release --no-restore -p:DebugType=None
