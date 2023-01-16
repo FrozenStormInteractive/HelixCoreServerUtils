@@ -1,5 +1,8 @@
-using System.Diagnostics;
 using CommandLine;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace HelixCoreServerCtl;
 
@@ -12,8 +15,28 @@ internal class StartCommand : IAsyncCommand
     [Option('a', "all", Default = false, HelpText = "All servers.")]
     public bool AllServices { get; set; }
 
+    [Option('q', Default = false, HelpText = "Send output to syslog instead of STDOUT or STDERR.")]
+    public bool Syslog { get; set; }
+
+    private Logger? log;
+
     public async Task<int> Execute()
     {
+        var logConfiguration = new LoggerConfiguration();
+        if (Syslog)
+        {
+            logConfiguration.WriteTo.LocalSyslog("p4dctl-ng");
+        }
+        else
+        {
+            logConfiguration.WriteTo.Console(
+                outputTemplate: "{Message:lj}{NewLine}{Exception}", 
+                theme: ConsoleTheme.None,
+                standardErrorFromLevel: LogEventLevel.Error);
+        }
+
+        log = logConfiguration.CreateLogger();
+
         IList<Service> services;
         if (AllServices)
         {
@@ -35,7 +58,7 @@ internal class StartCommand : IAsyncCommand
                 }
                 else
                 {
-                    await Console.Error.WriteLineAsync($"Service '{serviceName}' not found.");
+                    log.Error($"Service '{serviceName}' not found.");
                 }
             }
         }
@@ -46,7 +69,7 @@ internal class StartCommand : IAsyncCommand
             tasks.Add(StartService(service));
         }
         await Task.WhenAll(tasks);
-        Console.WriteLine($"Started {services.Count} service.");
+        log.Information($"Started {services.Count} service.");
 
         return 0;
     }
@@ -55,13 +78,13 @@ internal class StartCommand : IAsyncCommand
     {
         if (service.IsRunning)
         {
-            Console.WriteLine($"Started '{service.Config.Name}' p4d service.");
+            log!.Information($"Started '{service.Config.Name}' p4d service.");
         }
         else
         {
             // TODO: Handle exceptions
             await service.StartAsync();
-            Console.WriteLine($"Started '{service.Config.Name}' p4d service.");
+            log!.Information($"Started '{service.Config.Name}' p4d service.");
         }
     }
 }
