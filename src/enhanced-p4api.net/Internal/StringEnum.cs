@@ -1,3 +1,5 @@
+// Copyright (c) 2022, Perforce Software, Inc. All rights reserved.
+
 #nullable disable
 
 namespace Perforce.P4;
