@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputName>p4dctl-ng</OutputName>
+    <AssemblyName>p4dctl-ng</AssemblyName>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Condition="!Exists('AppPaths.override.json')" Include="AppPaths.json" LogicalName="HelixCoreServerCtl.AppPaths.json" />
+    <EmbeddedResource Condition="Exists('AppPaths.override.json')" Include="AppPaths.override.json" LogicalName="HelixCoreServerCtl.AppPaths.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Mono.Posix" Version="7.1.0-final.1.21458.1" />
+    <PackageReference Include="Sharprompt" Version="2.4.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\enhanced-p4api.net\enhanced-p4api.net.csproj" />
+  </ItemGroup>
+
+</Project>

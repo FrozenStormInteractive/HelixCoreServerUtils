@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ABA3D25E-B8E6-4151-869C-2932F565292D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixCoreServerCtl", "src\HelixCoreServerCtl\HelixCoreServerCtl.csproj", "{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "enhanced-p4api.net", "src\enhanced-p4api.net\enhanced-p4api.net.csproj", "{F1B91E8D-CB2A-420C-A260-14763A5FD7F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1B91E8D-CB2A-420C-A260-14763A5FD7F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1B91E8D-CB2A-420C-A260-14763A5FD7F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1B91E8D-CB2A-420C-A260-14763A5FD7F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1B91E8D-CB2A-420C-A260-14763A5FD7F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{799AB6FF-4E8C-46D9-8232-54AD7B7D13E3} = {ABA3D25E-B8E6-4151-869C-2932F565292D}
+		{F1B91E8D-CB2A-420C-A260-14763A5FD7F6} = {ABA3D25E-B8E6-4151-869C-2932F565292D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+{
+    "ConfigFile": "/etc/perforce/p4dctlng.conf",
+    "PidFileDirectory": "/var/run",
+    "DefaultServerRootDirectory": "/opt/perforce/servers",
+    "P4DExecute": "/opt/perforce/sbin/p4d"
+}
