@@ -16,14 +16,14 @@ internal class StartCommand : IAsyncCommand
     public bool AllServices { get; set; }
 
     [Option('q', Default = false, HelpText = "Send output to syslog instead of STDOUT or STDERR.")]
-    public bool Syslog { get; set; }
+    public bool Silent { get; set; }
 
     private Logger? log;
 
     public async Task<int> Execute()
     {
         var logConfiguration = new LoggerConfiguration();
-        if (Syslog)
+        if (Silent)
         {
             logConfiguration.WriteTo.LocalSyslog("p4dctl-ng");
         }
@@ -83,7 +83,7 @@ internal class StartCommand : IAsyncCommand
         else
         {
             // TODO: Handle exceptions
-            await service.StartAsync();
+            await service.StartAsync(Silent);
             log!.Information($"Started '{service.Config.Name}' p4d service.");
         }
     }

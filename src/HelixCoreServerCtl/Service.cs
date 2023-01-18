@@ -203,6 +203,12 @@ internal class Service
 
     private Process? StartProcess(string arguments, bool silent)
     {
+        var finalArguments = Config.Args + " " + arguments;
+        if (silent)
+        {
+            finalArguments += " -q";
+        }
+
         var execProcessStartInfo = new ProcessStartInfo
         {
             FileName = Config.Execute,

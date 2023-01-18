@@ -15,12 +15,12 @@ internal class StatusCommand : ICommand
     public bool AllServices { get; set; }
 
     [Option('q', Default = false, HelpText = "Send output to syslog instead of STDOUT or STDERR.")]
-    public bool Syslog { get; set; }
+    public bool Silent { get; set; }
 
     public int Execute()
     {
         var logConfiguration = new LoggerConfiguration();
-        if (Syslog)
+        if (Silent)
         {
             logConfiguration.WriteTo.LocalSyslog("p4dctl-ng");
         }
@@ -33,6 +33,8 @@ internal class StatusCommand : ICommand
         }
 
         var log = logConfiguration.CreateLogger();
+
+        bool errorWhenLoadingServices = false;
 
         IList<Service> services;
         if (AllServices)
@@ -55,6 +57,7 @@ internal class StatusCommand : ICommand
                 }
                 else
                 {
+                    errorWhenLoadingServices = true;
                     log.Error($"Service '{serviceName}' not found.");
                 }
             }
@@ -85,7 +88,7 @@ internal class StatusCommand : ICommand
         }
         else
         {
-            return 4;
+            return errorWhenLoadingServices ? 1 : 0;
         }
     }
 }
