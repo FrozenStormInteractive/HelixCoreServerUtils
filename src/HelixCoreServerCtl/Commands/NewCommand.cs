@@ -110,6 +110,7 @@ internal class NewCommand : IAsyncCommand
         var temporaryUserPassword = SuperUserPassword + "0";
 
         InitRecommended ??= Prompt.Confirm("Initialize the server with the recommended settings", true);
+        var startAfterConfiguration = Prompt.Confirm("Start the server after the configuration", true);
 
         var appConfig = AppConfig.Instance;
 
@@ -201,7 +202,7 @@ internal class NewCommand : IAsyncCommand
                 { "P4PORT", Port },
                 { "P4SSLDIR", SSLDirectory },
             }
-        });
+        })!;
 
         Console.WriteLine($"Service conf file saved as {serviceFileName}");
 
@@ -217,7 +218,7 @@ internal class NewCommand : IAsyncCommand
 
             try
             {
-                await service!.StartAsync(silent: true);
+                await service.StartAsync(silent: true);
 
                 settingValues = new Dictionary<string, string?>();
                 foreach (var settingName in settings)
@@ -426,10 +427,12 @@ internal class NewCommand : IAsyncCommand
                     }
                 }
 
-                await service!.StopAsync();
+                if (!startAfterConfiguration && service.IsRunning)
+                {
+                    await service.StopAsync();
+                }
             }
         }
-    
 
         Mono.Unix.Native.Syscall.umask(oldUmaskPerms);
         Console.WriteLine("Setup complete");
