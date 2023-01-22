@@ -66,7 +66,7 @@ internal class Service
         }
     }
 
-    public async Task StartAsync(bool silent = false)
+    public async Task<int> StartAsync(bool silent = false)
     {
         if (!IsRunning)
         {
@@ -75,19 +75,29 @@ internal class Service
             {
                 await bootstrapProcess.WaitForExitAsync();
 
-                if (File.Exists(PidFilePath))
+                if (bootstrapProcess.ExitCode == 0)
                 {
-                    var pidFileContent = File.ReadAllText(PidFilePath);
-                    int pid = 0;
-                    if (int.TryParse(pidFileContent, out pid))
+                    if (File.Exists(PidFilePath))
                     {
-                        if (pid >= 0)
+                        var pidFileContent = File.ReadAllText(PidFilePath);
+                        int pid = 0;
+                        if (int.TryParse(pidFileContent, out pid))
                         {
-                            ProcessID = pid;
+                            if (pid >= 0)
+                            {
+                                ProcessID = pid;
+                            }
                         }
+
                     }
+                    // TODO: Handle errors
+
+                    return 0;
                 }
-                // TODO: Handle errors
+                else
+                {
+                    return bootstrapProcess.ExitCode;
+                }
             }
             else
             {
@@ -98,9 +108,11 @@ internal class Service
         {
             // throw error
         }
+
+        return 1;
     }
 
-    public async Task StopAsync()
+    public async Task<int> StopAsync()
     {
         if (IsRunning && Process is not null)
         {
@@ -114,6 +126,8 @@ internal class Service
         {
             // throw error
         }
+
+        return 0;
     }
 
     public async Task RestartAsync(bool force = false)

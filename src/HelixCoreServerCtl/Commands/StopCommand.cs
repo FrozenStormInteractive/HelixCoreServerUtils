@@ -60,29 +60,37 @@ internal class StopCommand : IAsyncCommand
             }
         }
 
-        var tasks = new List<Task>();
+        var tasks = new List<Task<int>>();
         foreach (var service in services)
         {
             tasks.Add(StopService(service));
         }
-        await Task.WhenAll(tasks);
 
-        log.Information($"Stopped {services.Count} service.");
-
-        return 0;
+        var taskResults = await Task.WhenAll(tasks);
+        log.Information($"Stopped {taskResults.Count(x => x == 0)} service.");
+        return taskResults.Any(x => x != 0) ? 1 : 0;
     }
 
-    public async Task StopService(Service service)
+    public async Task<int> StopService(Service service)
     {
         if (service.IsRunning)
         {
             // TODO: Handle exceptions
-            await service.StopAsync();
-            log!.Information($"Stopped '{service.Config.Name}' p4d service.");
+            var exitCode = await service.StopAsync();
+            if (exitCode == 0)
+            {
+                log!.Information($"Stopped '{service.Config.Name}' p4d service.");
+            }
+            else
+            {
+                log!.Information($"'{service.Config.Name}' p4d service has error on stop.");
+            }
+            return exitCode;
         }
         else
         {
             log!.Information($"'{service.Config.Name}' p4d service not running.");
+            return 0;
         }
     }
 }

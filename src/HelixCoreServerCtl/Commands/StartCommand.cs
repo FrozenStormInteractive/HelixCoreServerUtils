@@ -63,28 +63,36 @@ internal class StartCommand : IAsyncCommand
             }
         }
 
-        var tasks = new List<Task>();
+        var tasks = new List<Task<int>>();
         foreach (var service in services)
         {
             tasks.Add(StartService(service));
         }
-        await Task.WhenAll(tasks);
-        log.Information($"Started {services.Count} service.");
-
-        return 0;
+        var taskResults = await Task.WhenAll(tasks);
+        log.Information($"Started {taskResults.Count(x => x == 0)} service.");
+        return taskResults.Any(x => x != 0) ? 1 : 0;
     }
 
-    public async Task StartService(Service service)
+    public async Task<int> StartService(Service service)
     {
         if (service.IsRunning)
         {
             log!.Information($"Started '{service.Config.Name}' p4d service.");
+            return 0;
         }
         else
         {
             // TODO: Handle exceptions
-            await service.StartAsync(Silent);
-            log!.Information($"Started '{service.Config.Name}' p4d service.");
+            var exitCode = await service.StartAsync(Silent);
+            if (exitCode == 0)
+            {
+                log!.Information($"Started '{service.Config.Name}' p4d service.");
+            }
+            else
+            {
+                log!.Information($"'{service.Config.Name}' p4d service has error on start.");
+            }
+            return exitCode;
         }
     }
 }
