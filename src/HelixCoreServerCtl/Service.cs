@@ -21,11 +21,19 @@ internal class Service
     private Process? _process;
     public Process? Process 
     {
-        get 
+        get
         {
             if (_process is null && ProcessID > 0)
             {
-                _process = Process.GetProcessById(ProcessID);
+                try
+                {
+                    _process = Process.GetProcessById(ProcessID);
+                }
+                catch(ArgumentException)
+                {
+                    // Process with the specified Id is not running.
+                    // Catch the exception but do nothing
+                }
             }
             return _process;
         }
