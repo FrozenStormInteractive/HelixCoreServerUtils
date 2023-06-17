@@ -19,7 +19,7 @@ internal class StopCommand : IAsyncCommand
     public bool Silent { get; set; }
 
     private Logger? log;
-    
+
     public async Task<int> Execute()
     {
         var logConfiguration = new LoggerConfiguration();
@@ -30,7 +30,7 @@ internal class StopCommand : IAsyncCommand
         else
         {
             logConfiguration.WriteTo.Console(
-                outputTemplate: "{Message:lj}{NewLine}{Exception}", 
+                outputTemplate: "{Message:lj}{NewLine}{Exception}",
                 theme: ConsoleTheme.None,
                 standardErrorFromLevel: LogEventLevel.Error);
         }
@@ -44,7 +44,7 @@ internal class StopCommand : IAsyncCommand
         }
         else
         {
-            List<Service> serviceList =  new List<Service>();
+            List<Service> serviceList = new List<Service>();
             services = serviceList;
             foreach (var serviceName in ServiceNames)
             {

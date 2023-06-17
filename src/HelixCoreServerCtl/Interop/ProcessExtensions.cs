@@ -11,6 +11,6 @@ static class ProcessExtensions
     public static void Kill(this Process process, Signum signal)
     {
         int r = Syscall.kill(process.Id, signal);
-		UnixMarshal.ThrowExceptionForLastErrorIf(r);
+        UnixMarshal.ThrowExceptionForLastErrorIf(r);
     }
 }

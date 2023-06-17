@@ -20,7 +20,7 @@ internal class UpgradeCommand : IAsyncCommand
         }
         else
         {
-            List<Service> serviceList =  new List<Service>();
+            List<Service> serviceList = new List<Service>();
             services = serviceList;
             foreach (var serviceName in ServiceNames)
             {

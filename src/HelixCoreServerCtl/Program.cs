@@ -5,11 +5,11 @@ using HelixCoreServerCtl;
 try
 {
 #endif
-    AppConfig.InitInstance();
-    AppConfig.Instance.Validate();
+AppConfig.InitInstance();
+AppConfig.Instance.Validate();
 
-    Type[] commands = new Type[]
-    {
+Type[] commands = new Type[]
+{
         typeof(NewCommand),
         typeof(StartCommand),
         typeof(StopCommand),
@@ -19,18 +19,19 @@ try
         typeof(CheckpointCommand),
         typeof(ExecCommand),
         typeof(UpgradeCommand),
-    };
+};
 
-    var parser = new Parser(with => {
-        with.EnableDashDash = true;
-        with.HelpWriter = Console.Error;
-    });
+var parser = new Parser(with =>
+{
+    with.EnableDashDash = true;
+    with.HelpWriter = Console.Error;
+});
 
-    return await parser.ParseArguments(args, commands)
-        .MapResult(
-            (ICommand command) => Task.FromResult(command.Execute()),
-            async (IAsyncCommand command) => await command.Execute(),
-            _ => Task.FromResult(1));
+return await parser.ParseArguments(args, commands)
+    .MapResult(
+        (ICommand command) => Task.FromResult(command.Execute()),
+        async (IAsyncCommand command) => await command.Execute(),
+        _ => Task.FromResult(1));
 #if !DEBUG
 }
 catch (Exception exception)

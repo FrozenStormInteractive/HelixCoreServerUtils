@@ -91,10 +91,10 @@ internal class AppConfig
             {
                 InitInstance();
             }
-            #pragma warning disable CS8603
+#pragma warning disable CS8603
             // Assigned in InitInstance method.
             return appConfig;
-            #pragma warning restore CS8603
+#pragma warning restore CS8603
         }
     }
 }

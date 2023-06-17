@@ -9,7 +9,7 @@ internal class ExecCommand : IAsyncCommand
     public string ServiceName { get; set; } = null!;
 
     [Value(1, MetaValue = "<exec args>")]
-	public IEnumerable<string> More { get; set; } = null!;
+    public IEnumerable<string> More { get; set; } = null!;
 
     [Option('f', "force", Default = false, HelpText = "Force exec to execute the command even if that p4d instance is currently running.")]
     public bool Force { get; set; }

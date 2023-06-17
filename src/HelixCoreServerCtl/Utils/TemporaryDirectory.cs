@@ -16,7 +16,7 @@ public class TemporaryDirectory : IDisposable
         {
             Directory.Delete(Path, true);
         }
-    
+
         Directory.CreateDirectory(Path);
     }
 

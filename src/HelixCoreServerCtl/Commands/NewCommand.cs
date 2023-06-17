@@ -73,8 +73,8 @@ internal class NewCommand : IAsyncCommand
 
         // TODO: Validate input
 
-        ServiceName ??= Prompt.Input<string>("Perforce Service name", validators: new[] 
-        { 
+        ServiceName ??= Prompt.Input<string>("Perforce Service name", validators: new[]
+        {
             Validators.Required(),
             Validators.RegularExpression(@"^[\w\-]+$", "Service name should only alphanumeric symbols"),
             Validators.MaxLength(32),
@@ -82,7 +82,7 @@ internal class NewCommand : IAsyncCommand
         });
 
         var defaultRootDirectory = Path.Combine(AppConfig.Instance.DefaultServerRootDirectory!, ServiceName);
-        RootDirectory ??= Prompt.Input<string>("Perforce Server root (P4ROOT)", defaultRootDirectory, validators: new[] 
+        RootDirectory ??= Prompt.Input<string>("Perforce Server root (P4ROOT)", defaultRootDirectory, validators: new[]
         {
             Validators.Required(),
             PerforcePromptValidators.P4RootDirectoryNotConfigured(this),
@@ -96,14 +96,14 @@ internal class NewCommand : IAsyncCommand
             PerforcePromptValidators.ValidP4Port(),
             PerforcePromptValidators.P4PortNotUsed(),
         });
-        SuperUserName ??= Prompt.Input<string>("Perforce super-user login", validators: new[] 
+        SuperUserName ??= Prompt.Input<string>("Perforce super-user login", validators: new[]
         {
             Validators.Required(),
             Validators.MinLength(3),
         });
-        SuperUserPassword ??= Prompt.Password("Perforce super-user password", validators: new[] 
-        { 
-            Validators.Required(), 
+        SuperUserPassword ??= Prompt.Password("Perforce super-user password", validators: new[]
+        {
+            Validators.Required(),
             Validators.MinLength(8),
             Validators.RegularExpression(@"(?=.*\d)(?=.*[a-z])(?=.*[A-Z])", "Password should be mixed case or contain non alphabetic characters"),
         });
@@ -119,19 +119,19 @@ internal class NewCommand : IAsyncCommand
         var includePath = appConfig.Includes?.FirstOrDefault();
         if (includePath is not null)
         {
-            defaultServiceFileName = Path.Combine(includePath,  $"{ServiceName}.conf");
+            defaultServiceFileName = Path.Combine(includePath, $"{ServiceName}.conf");
             if (System.IO.File.Exists(defaultServiceFileName))
             {
                 int counter = 1;
                 do
                 {
-                    defaultServiceFileName = Path.Combine(includePath,  $"{ServiceName}{counter}.conf");
+                    defaultServiceFileName = Path.Combine(includePath, $"{ServiceName}{counter}.conf");
                     counter++;
                 } while (System.IO.File.Exists(defaultServiceFileName) || counter < 99);
             }
         }
 
-        serviceFileName ??= Prompt.Input<string>("Service config path (where to save the .conf file)", defaultServiceFileName, validators: new[] 
+        serviceFileName ??= Prompt.Input<string>("Service config path (where to save the .conf file)", defaultServiceFileName, validators: new[]
         {
             Validators.Required(),
             PerforcePromptValidators.FileNotExists(),
@@ -152,7 +152,7 @@ internal class NewCommand : IAsyncCommand
         Console.WriteLine($"Configuring p4d service '{ServiceName}' with the information you specified...");
 
         FilePermissions oldUmaskPerms = Mono.Unix.Native.Syscall.umask(FilePermissions.S_IRWXG | FilePermissions.S_IRWXO);
-        
+
         Directory.CreateDirectory(RootDirectory);
         Directory.CreateDirectory(Path.Combine(RootDirectory, "root"));
         Directory.CreateDirectory(Path.Combine(RootDirectory, "journals"));
@@ -180,7 +180,7 @@ internal class NewCommand : IAsyncCommand
                 int r = Mono.Unix.Native.Syscall.chmod(SSLDirectory, Mono.Unix.Native.FilePermissions.S_IRWXU);
                 UnixMarshal.ThrowExceptionForLastErrorIf(r);
             }
-            if (!System.IO.File.Exists(Path.Combine(SSLDirectory, "certificate.txt")) && 
+            if (!System.IO.File.Exists(Path.Combine(SSLDirectory, "certificate.txt")) &&
                 !System.IO.File.Exists(Path.Combine(SSLDirectory, "privatekey.txt")))
             {
                 await RunP4D("-Gc").WaitForExitAsync();
@@ -236,7 +236,7 @@ internal class NewCommand : IAsyncCommand
                 con.UserName = SuperUserName;
 
                 P4.Options connectOptions = new P4.Options();
-                connectOptions["ProgramName"] ="p4dctl-ng";
+                connectOptions["ProgramName"] = "p4dctl-ng";
                 var programVersion = Assembly.GetExecutingAssembly().GetName().Version;
                 if (programVersion is not null)
                 {
@@ -246,7 +246,7 @@ internal class NewCommand : IAsyncCommand
                 if (!NoSSL.Value)
                 {
                     con.TrustAndConnect(connectOptions, "-y", null);
-                } 
+                }
                 else
                 {
                     con.Connect(connectOptions);
@@ -303,7 +303,7 @@ internal class NewCommand : IAsyncCommand
 
                     Console.WriteLine("Enabling unload and spec depots");
 
-                    var specDepot = new P4.Depot 
+                    var specDepot = new P4.Depot
                     {
                         Id = "spec",
                         Type = P4.DepotType.Spec,
@@ -314,7 +314,7 @@ internal class NewCommand : IAsyncCommand
                     specDepot = repository.CreateDepot(specDepot);
                     repository.AdminUpdateSpecDepot();
 
-                    var unloadDepot = new P4.Depot 
+                    var unloadDepot = new P4.Depot
                     {
                         Id = "unload",
                         Type = P4.DepotType.Unload,
@@ -410,13 +410,13 @@ internal class NewCommand : IAsyncCommand
 
                 con.Disconnect();
             }
-            #if !DEBUG
+#if !DEBUG
             catch (Exception e)
             {
                 Console.Error.WriteLine($"Error when initializing the server: {e.Message}");
                 return 1;
             }
-            #endif
+#endif
             finally
             {
                 if (settingValues is not null)
@@ -440,7 +440,7 @@ internal class NewCommand : IAsyncCommand
         return 0;
     }
 
-    private Process RunP4D(string arguments, IDictionary<string, string?>? environment = null,  bool silent = true)
+    private Process RunP4D(string arguments, IDictionary<string, string?>? environment = null, bool silent = true)
     {
         if (CaseSensitivity.HasValue)
         {
@@ -538,7 +538,7 @@ internal class NewCommand : IAsyncCommand
                     return ValidationResult.Success;
                 }
 
-                foreach(var endPoint in IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners())
+                foreach (var endPoint in IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners())
                 {
                     if (endPoint.Port == p4Port.PortNumber)
                     {

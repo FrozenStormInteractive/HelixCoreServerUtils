@@ -13,7 +13,7 @@ internal class CheckpointCommand : IAsyncCommand
         var service = ServiceManager.Instance.FindServiceByName(ServiceName);
         if (service is not null)
         {
-            return await service.ExecAsync("-jc");   
+            return await service.ExecAsync("-jc");
         }
         else
         {

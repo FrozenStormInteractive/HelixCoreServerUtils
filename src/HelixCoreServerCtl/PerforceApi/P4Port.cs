@@ -66,7 +66,7 @@ public class P4Port
             result = null;
             return false;
         }
-        
+
         if (portNumber < 1025 || portNumber > 65535)
         {
             result = null;
@@ -102,7 +102,7 @@ public class P4Port
         }
 
         builder.Append(PortNumber);
-        
+
         return builder.ToString();
     }
 }

@@ -1,4 +1,3 @@
-
 using System.Diagnostics;
 using Mono.Unix.Native;
 
@@ -19,7 +18,7 @@ internal class Service
     public int ProcessID { get; private set; } = -1;
 
     private Process? _process;
-    public Process? Process 
+    public Process? Process
     {
         get
         {
@@ -29,7 +28,7 @@ internal class Service
                 {
                     _process = Process.GetProcessById(ProcessID);
                 }
-                catch(ArgumentException)
+                catch (ArgumentException)
                 {
                     // Process with the specified Id is not running.
                     // Catch the exception but do nothing
@@ -37,13 +36,13 @@ internal class Service
             }
             return _process;
         }
-        private set 
+        private set
         {
             _process = value;
         }
     }
 
-    public bool IsRunning 
+    public bool IsRunning
     {
         get
         {

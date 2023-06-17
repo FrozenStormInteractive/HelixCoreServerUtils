@@ -13,7 +13,7 @@ internal static class AppPaths
         public string PidFileDirectory { get; set; } = default!;
 
         public string DefaultServerRootDirectory { get; set; } = default!;
-        
+
         public string P4DExecute { get; set; } = default!;
     }
 
